@@ -46,25 +46,16 @@
 Live version available at:  
 🔗 [https://psychoterapia-krasnik.pl/](https://psychoterapia-krasnik.pl/)
 
-### 🧪 Run locally
+## 🧪 Run locally
 
 ```bash
 git clone https://github.com/GoralTomaszGorski/psychotherapist-office.git
-```
-```sh
 cd psychotherapist-office
-```
-### Build application
-```sh
 mvn package
-```
-
-### Run app
-```sh
 java -jar target/psychotherapistOffice-0.0.1-SNAPSHOT.jar
 ```
 
-### Open app in you browser
+### Open app in your browser
 [Click here](http://localhost:8080/).
 
 ## Run project by docker
@@ -95,13 +86,12 @@ docker-compose -f docker/docker-compose.yml up -d
 ### Open app in you browser
 [Click here](http://localhost:8080/).
 
-### Authentication data:
-###### Admin:
-###### login: admin@example.com
-###### password: adminpass
-###### User:
-###### login: user@example.com
-###### password: userpass
+### 🔐 Authentication data:
+| Role  | Login                                         | Password  |
+| ----- | --------------------------------------------- | --------- |
+| Admin | [admin@example.com](mailto:admin@example.com) | adminpass |
+| User  | [user@example.com](mailto:user@example.com)   | userpass  |
+
 
 ## 🧠 Project Purpose
 This application was built to improve communication and scheduling between psychotherapists and clients.
