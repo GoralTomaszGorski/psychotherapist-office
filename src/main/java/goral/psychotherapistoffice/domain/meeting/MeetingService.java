@@ -66,6 +66,8 @@ public class MeetingService {
         calender.setFree(false);
         calenderRepository.save(calender);
         meetingRepository.save(meeting);
+        String messageDetails = informBody(calender, patient);
+        messageService.sendNewVisitMessage(messageDetails);
     }
 
     public List<MeetingDto> findAllMeetings() {
@@ -97,6 +99,8 @@ public class MeetingService {
         meetingRepository.save(meeting);
         String messageDetails = informBody(calender, patient);
         messageService.sendNewVisitMessage(messageDetails);
+
+
     }
 
     @Transactional
