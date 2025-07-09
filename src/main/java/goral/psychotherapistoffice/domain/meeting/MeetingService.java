@@ -6,6 +6,9 @@ import goral.psychotherapistoffice.domain.calender.CalenderService;
 import goral.psychotherapistoffice.domain.exception.TermIsBusyException;
 import goral.psychotherapistoffice.domain.meeting.dto.MeetingDto;
 import goral.psychotherapistoffice.domain.meeting.dto.MeetingToSaveDto;
+import goral.psychotherapistoffice.domain.messeges.MessageService;
+import goral.psychotherapistoffice.domain.messeges.dto.MessageDto;
+import goral.psychotherapistoffice.domain.patient.DateInWarsaw;
 import goral.psychotherapistoffice.domain.patient.Patient;
 import goral.psychotherapistoffice.domain.patient.PatientJpaRepository;
 import goral.psychotherapistoffice.domain.patient.PatientService;
@@ -17,6 +20,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
 import java.util.List;
 
 @Service
@@ -29,8 +33,10 @@ public class MeetingService {
     public final TherapyRepository therapyRepository;
     public final PatientService patientService;
     public final UserService userService;
+    private final MessageService messageService;
+    private final DateInWarsaw dateInWarsaw;
 
-    public MeetingService(PatientJpaRepository patientJpaRepository, CalenderRepository calenderRepository, CalenderService calenderService, MeetingRepository meetingRepository, TherapyRepository therapyRepository, PatientService patientService, UserService userService) {
+    public MeetingService(PatientJpaRepository patientJpaRepository, CalenderRepository calenderRepository, CalenderService calenderService, MeetingRepository meetingRepository, TherapyRepository therapyRepository, PatientService patientService, UserService userService, MessageService messageService, DateInWarsaw dateInWarsaw) {
         this.patientJpaRepository = patientJpaRepository;
         this.calenderRepository = calenderRepository;
         this.calenderService = calenderService;
@@ -38,7 +44,12 @@ public class MeetingService {
         this.therapyRepository = therapyRepository;
         this.patientService = patientService;
         this.userService = userService;
+        this.messageService = messageService;
+        this.dateInWarsaw = dateInWarsaw;
     }
+
+    MessageDto messageDto = new MessageDto();
+
 
     @Transactional
     public void addMeeting(MeetingToSaveDto meetingToSaveDto){
@@ -84,6 +95,8 @@ public class MeetingService {
                 meetingToSaveDto.getTherapy()).orElseThrow();
         meeting.setTherapy(therapy);
         meetingRepository.save(meeting);
+        String messageDetails = informBody(calender, patient);
+        messageService.sendNewVisitMessage(messageDetails);
     }
 
     @Transactional
@@ -113,5 +126,12 @@ public class MeetingService {
                 .map(MeetingDtoMapper::map)
                 .toList();
     }
+
+    public String informBody(Calender calender, Patient patient) {
+        return
+                "Zarezerwowano wizytę z " + patient.getName() + " " + patient.getSurname() + patient.getTelephone() + " na " +
+                        calender.getDayof() + calender.getTime() + dateInWarsaw.localDateInWarsaw;
+    }
+
 
 }
